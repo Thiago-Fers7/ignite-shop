@@ -1,6 +1,7 @@
 import axios from "axios"
 import { GetStaticProps } from "next"
 import Image from "next/future/image"
+import Head from "next/head"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import Stripe from "stripe"
@@ -32,33 +33,36 @@ export default function Product({ product }: ProductProps) {
       const { checkoutUrl } = response.data;
 
       window.location.href = checkoutUrl;
-    } catch(error) {
+    } catch (error) {
       setIsCreatingCheckoutSession(false);
       alert('Falha ao comprar o produto');
     }
   }
-  
+
   if (isFallback) {
     return <p>Carregando...</p>
   }
 
   return (
-    <ProductContainer>
-      <ImageContainer>
-        <Image src={product.imageUrl} alt="" height={520} width={480} />
-      </ImageContainer>
+    <>
+      <Head>
+        <title>{product.name} | Ignite Shop</title>
+      </Head>
 
-      <ProductDetails>
-        <h1>{product.name}</h1>
-        <span>{product.price}</span>
-
-        <p>{product.description}</p>
-
-        <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
-          Comprar agora
-        </button>
-      </ProductDetails>
-    </ProductContainer>
+      <ProductContainer>
+        <ImageContainer>
+          <Image src={product.imageUrl} alt="" height={520} width={480} />
+        </ImageContainer>
+        <ProductDetails>
+          <h1>{product.name}</h1>
+          <span>{product.price}</span>
+          <p>{product.description}</p>
+          <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
+            Comprar agora
+          </button>
+        </ProductDetails>
+      </ProductContainer>
+    </>
   )
 }
 
